@@ -1,0 +1,132 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<title>reveal.js</title>
+
+		<link rel="stylesheet" href="dist/reset.css">
+		<link rel="stylesheet" href="dist/reveal.css">
+		<link rel="stylesheet" href="dist/theme/black.css" id="theme">
+
+		<!-- Theme used for syntax highlighted code -->
+		<link rel="stylesheet" href="plugin/highlight/monokai.css" id="highlight-theme">
+		<style>
+			.reveal section pre code {
+    font-size: 0.7em !important;
+}
+		</style>
+	</head>
+	<body>
+		<div class="reveal">
+			<div class="slides">
+                <section>Why I went out of my comfort zone
+                    note:
+                    I had been coding for some 23 years or so, only 17 of those I actually got paid to write code. 
+I started getting paid when I worked at a PC helpdesk, this was during the home PC era 1998 or so. Me and a colluge got really fed up with the totally crappy software we hade to use so we made Züper App. Saved us tones of time each day, but the code was not so super. It did work however, 
+We managed to talk around the house and could have all the serialnumbers of all computers delivered, before they where delivered and not 3 days later. Since people tend to call on the same day, that was a huge time saver, now we could search by name instead having to manually type in all information in our support system. 
+With the press of a button it would login to Posten (port-nord) and fill in all the forms to pick up a PC as someones house. And so on. Really super for us. But very small system and not official in any way. 
+Did not stay there for to long since the PC sales where going down and I was (am) a bit of a schmuck I had a fall out with the boss and resigned in a meeting without any idea of what to do next. 
+
+                </section>
+                <section><img src="Images/wapnet.png" />
+                note:
+                </section>
+                <section><img src="Images/dependency.png" /> </section>
+                <section><img src="Images/ballonhill.png" /></section>
+                <section><img src="Images/ballinvalley.png" /></section>
+                
+				<section>
+					<pre><code data-trim data-noescape class="lang-fsharp hljs">
+                        printf "Hello world"
+					</code></pre>
+                  </section>
+                  <section>
+					<pre><code data-trim data-noescape class="lang-fsharp hljs">
+                        let inline (|>>>) m f       = m |>> map f
+                        let inline (|>>>>) m f      = m |>>> map f
+                        let inline (|>>>>>) m f     = m |>>>> map f
+                        let inline (|>>>>>>) m f    = m |>>>>> map f
+                        let inline (|>>>>>>>) m f   = m |>>>>>> map f
+                        let inline (|>>>>>>>>) m f  = m |>>>>>>> map f
+                        let inline (|>>>>>>>>>) m f = m |>>>>>>>> map f
+                    
+                        let inline (>-->) m f       = m >-> map f
+                        let inline (>--->) m f      = m >--> map f
+                        let inline (>---->) m f     = m >---> map f
+                        let inline (>----->) m f    = m >----> map f
+                        let inline (>------>) m f   = m >-----> map f
+                        let inline (>------->) m f  = m >------> map f
+                        let inline (>-------->) m f = m >-------> map f
+					</code></pre>
+                  </section>
+                  <section>
+					<pre><code data-trim data-noescape class="lang-fsharp hljs">
+                    let authRoutes principalStore (resolver: Resolver): HttpHandler list = [
+                        POST >=> route "/v1/auth/start" >=> resolver.toWebPart Auth.Views.start
+                        POST >=> route "/v1/auth/status" >=> resolver.toWebPart Auth.Views.status
+                        POST >=> route "/v1/auth/verify" >=> resolver.toWebPart (Auth.Views.verify principalStore)
+                        POST >=> route "/v1/auth/cancel" >=> resolver.toWebPart Auth.Views.cancel
+                        POST >=> route "/v1/auth/refresh" >=> resolver.toWebPart Auth.Views.refresh
+                    ]
+					</code></pre>
+                  </section>
+                  <section>
+					<pre><code data-trim data-noescape class="lang-csharp hljs" style="font-size: 0.4em !important;line-height: normal !important;">
+                        public class AuthController : Controller
+                        {
+                            [Route("Auth/start")]
+                            public IActionResult Start()
+                            {
+                                return View();
+                            }
+                    
+                            [Route("Auth/Status")]
+                            public IActionResult Status()
+                            {
+                                return View();
+                            }
+                    
+                            [Route("Auth/Verify")]
+                            public IActionResult Verify()
+                            {
+                                return View();
+                            }
+                            
+                            [Route("Auth/Cancel")]
+                            public IActionResult Cancel()
+                            {
+                                return View();
+                            }
+                    
+                            [Route("Auth/Cancel")]
+                            public IActionResult Refresh()
+                            {
+                                return View();
+                            }
+                    
+                        }
+					</code></pre>
+                  </section>
+			</div>
+			
+		</div>
+
+		<script src="dist/reveal.js"></script>
+		<script src="plugin/notes/notes.js"></script>
+		<script src="plugin/markdown/markdown.js"></script>
+		<script src="plugin/highlight/highlight.js"></script>
+		<script>
+			// More info about initialization & config:
+			// - https://revealjs.com/initialization/
+			// - https://revealjs.com/config/
+			Reveal.initialize({
+				hash: true,
+
+				// Learn about plugins: https://revealjs.com/plugins/
+				plugins: [ RevealMarkdown, RevealHighlight, RevealNotes ]
+			});
+		</script>
+	</body>
+</html>
