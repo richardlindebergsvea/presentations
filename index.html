@@ -1,70 +1,201 @@
 <!doctype html>
 <html>
-	<head>
-		<meta charset="utf-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
-		<title>reveal.js</title>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
-		<link rel="stylesheet" href="reveal.js/dist/reset.css">
-		<link rel="stylesheet" href="reveal.js/dist/reveal.css">
-		<link rel="stylesheet" href="reveal.js/dist/theme/black.css" id="theme">
+    <title>reveal.js</title>
 
-		<!-- Theme used for syntax highlighted code -->
-		<link rel="stylesheet" href="reveal.js/plugin/highlight/monokai.css" id="highlight-theme">
-		<style>
-			.reveal section pre code {
-    font-size: 0.7em !important;
-}
-		</style>
-	</head>
-	<body>
-		<div class="reveal">
-			<div class="slides">
-                <section>Why I went out of my comfort zone
-                    <aside class="notes">
-                    I had been coding for some 23 years or so, only 17 of those I actually got paid to write code. 
-I started getting paid when I worked at a PC helpdesk, this was during the home PC era 1998 or so. Me and a colluge got really fed up with the totally crappy software we hade to use so we made Züper App. Saved us tones of time each day, but the code was not so super. It did work however, 
-We managed to talk around the house and could have all the serialnumbers of all computers delivered, before they where delivered and not 3 days later. Since people tend to call on the same day, that was a huge time saver, now we could search by name instead having to manually type in all information in our support system. 
-With the press of a button it would login to Posten (port-nord) and fill in all the forms to pick up a PC as someones house. And so on. Really super for us. But very small system and not official in any way. 
-Did not stay there for to long since the PC sales where going down and I was (am) a bit of a schmuck I had a fall out with the boss and resigned in a meeting without any idea of what to do next. 
-                    </aside>
-                </section>
-                <section><img src="Images/wapnet.png" />
-                    <aside class="notes">I had a friend who had started a company just a year before, so I called him up and begged him to take me on board or if he begged me. So know we had a 2 man shop, we where supposed to do to WAP applications, this was at the time when mobile phones could not deal with html. WAP was super hot so the company was called WAPNET. However we needed money so we ended up doing a booking system for Julgalan. They had been using Excel to keep track of all tickets, all food, invoices and extras and then make seeting arrengements. After the first year it was quite obvous it would not work, but Micke being somewhat of a sheep dude didn’t want to pay big money so we did it for what we thought was a huge amount of money, it wasn’t..  That system was not super great either, code wise. Written in Delphi with a SQL server, It did work however and the users where happy. We handled maybe 50-100 000 people each year in the system. With invoicing integrations and all. 
-                        One thing lead to another and soon we had a booking system for restaurants and 12 years later we had over 300 restaurants in Sweden using our system. By this time I of course knew every pattern in the GOF book, oop, Union architecture and what not. I had no problem making our software do what we wanted. After 12 years together I left the company, the company was sold of to our biggest competitor and became their premium product. 
-                        </aside>
-                </section>
-                <section><img src="Images/dependency.png" /> </section>
-                <section><img src="Images/ballonhill.png" /></section>
-                <section><img src="Images/ballinvalley.png" /></section>
-                
-				<section>
-					<pre><code data-trim data-noescape class="lang-fsharp hljs">
+    <link rel="stylesheet" href="reveal.js/dist/reset.css">
+    <link rel="stylesheet" href="reveal.js/dist/reveal.css">
+    <link rel="stylesheet" href="reveal.js/dist/theme/black.css" id="theme">
+
+    <!-- Theme used for syntax highlighted code -->
+    <link rel="stylesheet" href="reveal.js/plugin/highlight/monokai.css" id="highlight-theme">
+    <style>
+        .reveal section pre code {
+            font-size: 0.7em !important;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="reveal">
+        <div class="slides">
+            <section>Why I went out of my comfort zone
+                <aside class="notes">
+                    I had been coding for some 23 years or so, only 17 of those I actually got paid to write code.
+                    I started getting paid when I worked at a PC helpdesk, this was during the home PC era 1998 or so.
+                    Me and a colluge got really fed up with the totally crappy software we hade to use so we made Züper
+                    App. Saved us tones of time each day, but the code was not so super. It did work however,
+                    We managed to talk around the house and could have all the serialnumbers of all computers delivered,
+                    before they where delivered and not 3 days later. Since people tend to call on the same day, that
+                    was a huge time saver, now we could search by name instead having to manually type in all
+                    information in our support system.
+                    With the press of a button it would login to Posten (port-nord) and fill in all the forms to pick up
+                    a PC as someones house. And so on. Really super for us. But very small system and not official in
+                    any way.
+                    Did not stay there for to long since the PC sales where going down and I was (am) a bit of a schmuck
+                    I had a fall out with the boss and resigned in a meeting without any idea of what to do next.
+                </aside>
+            </section>
+            <section><img src="Images/wapnet.png" />
+                <aside class="notes">
+                    <p>I had a friend who had started a company just a year before, so I called him up and begged him to
+                        take me on board or if he begged me.<br>
+                        So know we had a 2 man shop, we where supposed to do to WAP applications, this was at the time
+                        when mobile phones could not deal with html.<br>
+                        WAP was super hot so the company was called WAPNET.
+                    </p>
+                    <p>
+                        However we needed money so we ended up doing a booking system for Julgalan.
+                        They had been using Excel to keep track of all tickets, all food, invoices and extras and then
+                        make seeting arrengements.
+                        After the first year it was quite obvous it would not work, but Micke being somewhat of a sheep
+                        dude didn’t want to pay big money so we did it for what we thought was a huge amount of money,
+                        it wasn’t..
+                    </p>
+                    That system was not super great either, code wise.
+                    Written in Delphi with a SQL server, It did work however and the users where happy.
+                    We handled maybe 50-100 000 people each year in the system. With invoicing integrations and all.
+                </aside>
+            </section>
+            <section>
+                <img src="Images/2book.png" />
+                <aside class="notes">
+                    One thing lead to another and soon we had a booking system for restaurants and 12 years later we had
+                    over 300 restaurants in Sweden and Norway using our system.
+                    By this time I of course knew every pattern in the GOF book, oop, Union architecture and what not.
+                    I had no problem making our software do what we wanted.
+                    After 12 years together I left the company, the company was sold of to our biggest competitor and
+                    became their premium product.
+                </aside>
+            </section>
+            <section>
+                <img src="Images/wordcloud.png">
+                <aside class="notes">
+                    I then worked at DGC, Movestic and Qliro. <br>
+                    The whole time writing the normal C# enterprice web api stuffy that you all write every day. But it
+                    was itching.. <br>
+                    We did manage to get stuff out, stuff worked. But stuff took a long time and was very often overly
+                    complicated. <br>
+                    Or so I felt. <br>
+                    When I did follow “they way to do things” ™, it was 8 interfaces and 9 classes just to check if two
+                    headers values matched the values in a SQL database. <br>
+                    You know we have to follow SOLID, make sure we can unit test every thing. And follow all the rules
+                    to make your system maintainable.<br>
+                </aside>
+            </section>
+            <section><img src="Images/dependency.png" />
+                <aside class="notes">
+                    Before you know it you have applications that look like this. <br>
+                    And the only way to not end up here is to always think about everything in the last picture and even
+                    more. <br>
+                    But don't follow everything all the time, only when it is appropriate otherwise you end up here as
+                    well. <br>
+                </aside>
+            </section>
+            <section><img src="Images/ballonhill.png" />
+                <aside class="notes">
+                    This is how it felt to me. Always trying to balance the ball on the hill.<br>
+                    Nothing in our tools help us stay here. Imperative languages like C# is really good. <br>
+                    You can write pretty much anything you want and connect it endless ways. But this is also a
+                    curse<br>
+                </aside>
+            </section>
+            <section><img src="Images/ballinvalley.png" />
+                <aside class="notes">
+                    Wouldn't this be nice? <br>
+                    If the way you write code tends to gravitate towards the prefered position. <br>
+                    Yeah given that the position you want is in the bottom of the pit. <br>
+                    This is what Mark Seman promised in his talk, Pit of success. <br>
+                    He was talking about functional programing, and he is not one of these professor dudes you might
+                    think of when talking about things like Haskell. <br>
+                    He wrote a 500 page book about dependency injection and is a Consultant full time. <br>
+                    This and and the fact that I had been fiddling with tools like NSB and Akka made me take the leap in
+                    to this strange Functional thingy. <br>
+                    <br>
+                    F#, how hard can it be?
+                </aside>
+            </section>
+
+            <section>
+                <pre><code data-trim data-noescape class="lang-fsharp hljs">
                         printf "Hello world"
-					</code></pre>
-                  </section>
-                  <section>
-					<pre><code data-trim data-noescape class="lang-fsharp hljs">
-                        let inline (|>>>) m f       = m |>> map f
-                        let inline (|>>>>) m f      = m |>>> map f
-                        let inline (|>>>>>) m f     = m |>>>> map f
-                        let inline (|>>>>>>) m f    = m |>>>>> map f
-                        let inline (|>>>>>>>) m f   = m |>>>>>> map f
-                        let inline (|>>>>>>>>) m f  = m |>>>>>>> map f
-                        let inline (|>>>>>>>>>) m f = m |>>>>>>>> map f
-                    
-                        let inline (>-->) m f       = m >-> map f
-                        let inline (>--->) m f      = m >--> map f
-                        let inline (>---->) m f     = m >---> map f
-                        let inline (>----->) m f    = m >----> map f
-                        let inline (>------>) m f   = m >-----> map f
-                        let inline (>------->) m f  = m >------> map f
-                        let inline (>-------->) m f = m >-------> map f
-					</code></pre>
-                  </section>
-                  <section>
-					<pre><code data-trim data-noescape class="lang-fsharp hljs">
+                    </code></pre>
+                <aside class="notes">
+                    See, not very hard. <br>
+                    Just as promossed the amount of code whent down by alot. Just type this in a file, and compile it.
+                    It will print print "Hello world"<br>
+                    The same in C# actually is much more code, you would need to have a class and a entry point and what
+                    not. <br>
+                    Yes, if you want the f# thingy to compile to an exe you actually have to write a bit more. <br>
+                </aside>
+            </section>
+            <section>
+                <pre><code data-trim data-noescape class="lang-fsharp hljs">
+                        [&lt;EntryPoint&gt;]
+                            let main argv =
+                                printfn "Hello World"
+                                0 // return an integer exit code
+                    </code></pre>
+                <aside class="notes">
+                    Not very hard this functional thingy..<br>
+                    And indeed a bit shorter then the c# code. <br>
+                    Not that the C# thing is particualalry hard either
+                </aside>
+            </section>
+            <section>
+            <pre><code data-trim data-noescape class="lang-Csharp hljs">
+                    using System;
+
+                    namespace ConsoleApp1
+                    {
+                        class Program
+                        {
+                            static void Main(string[] args)
+                            {
+                                Console.WriteLine("Hello World!");
+                            }
+                        }
+                    }
+                </code></pre>
+            <aside class="notes">
+                And it is just boilerplate things that Visual studio will write out anyhow so why care?<br>
+                And What the heck is the difference? <br>
+                I mean, sure some less code but the actual typing is the same.<br>
+                So it just another syntax, maybe fine. But why on earth would I spend time to learn that? <br>
+                <br>
+                It is not just new syntax. <br>
+                But how this solve everything? 
+            </aside>
+           </section>
+           <section>
+            <img src="Images/functionseverywhere.png">
+            <aside class="notes">
+                As you see you just swap all your hard earned patterns, for one simple thing. <br>
+                A function. <br>
+                Then you are done!
+            </aside>
+           </section>
+           <section>
+               HTTP request -> HTTP Response
+               <aside class="notes">
+                <p>
+                When building an API this is what you are doing. <br>
+                You take a HTTP request and then you fiddle around a bit and then you return a HTTP Response. 
+                </p>
+                <p>
+                How does OOP help us here? Is it the HTTP thing that we should model? <br>
+                No of course not we should model the thing we are acting on. <br>
+                
+            </p>
+
+            </aside>
+           </section>
+           <section>
+                <pre><code data-trim data-noescape class="lang-fsharp hljs">
                     let authRoutes principalStore (resolver: Resolver): HttpHandler list = [
                         POST >=> route "/v1/auth/start" >=> resolver.toWebPart Auth.Views.start
                         POST >=> route "/v1/auth/status" >=> resolver.toWebPart Auth.Views.status
@@ -73,9 +204,9 @@ Did not stay there for to long since the PC sales where going down and I was (am
                         POST >=> route "/v1/auth/refresh" >=> resolver.toWebPart Auth.Views.refresh
                     ]
 					</code></pre>
-                  </section>
-                  <section>
-					<pre><code data-trim data-noescape class="lang-csharp hljs" style="font-size: 0.4em !important;line-height: normal !important;">
+            </section>
+            <section>
+                <pre><code data-trim data-noescape class="lang-csharp hljs" style="font-size: 0.4em !important;line-height: normal !important;">
                         public class AuthController : Controller
                         {
                             [Route("Auth/start")]
@@ -110,25 +241,26 @@ Did not stay there for to long since the PC sales where going down and I was (am
                     
                         }
 					</code></pre>
-                  </section>
-			</div>
-			
-		</div>
+            </section>
+        </div>
 
-		<script src="reveal.js/dist/reveal.js"></script>
-		<script src="reveal.js/plugin/notes/notes.js"></script>
-		<script src="reveal.js/plugin/markdown/markdown.js"></script>
-		<script src="reveal.js/plugin/highlight/highlight.js"></script>
-		<script>
-			// More info about initialization & config:
-			// - https://revealjs.com/initialization/
-			// - https://revealjs.com/config/
-			Reveal.initialize({
-				hash: true,
+    </div>
 
-				// Learn about plugins: https://revealjs.com/plugins/
-				plugins: [ RevealMarkdown, RevealHighlight, RevealNotes ]
-			});
-		</script>
-	</body>
+    <script src="reveal.js/dist/reveal.js"></script>
+    <script src="reveal.js/plugin/notes/notes.js"></script>
+    <script src="reveal.js/plugin/markdown/markdown.js"></script>
+    <script src="reveal.js/plugin/highlight/highlight.js"></script>
+    <script>
+        // More info about initialization & config:
+        // - https://revealjs.com/initialization/
+        // - https://revealjs.com/config/
+        Reveal.initialize({
+            hash: true,
+
+            // Learn about plugins: https://revealjs.com/plugins/
+            plugins: [RevealMarkdown, RevealHighlight, RevealNotes]
+        });
+    </script>
+</body>
+
 </html>
