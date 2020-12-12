@@ -96,6 +96,108 @@
                     well. <br>
                 </aside>
             </section>
+            <section>
+                <h1>But why?</h1>
+                <aside class="notes">
+                    <p>
+                    Why does this happen all the Time? <br>
+                    What is it that we are really doing? Are we really using the right tools for the job? <br>
+                </p>
+                <p>
+                    On one hand yes. I mean we can absolutely build to kind of software we do today with C#<br>
+                    But are there any alternatives? <br>
+                </p>
+                </aside>
+            </section>
+            <section>
+                <ul>
+                <li class="fragment">Machine code?</li>
+                <li class="fragment">Assembler</li>
+                <li class="fragment">Procedural</li>
+                <li class="fragment">Functional</li>
+                <li class="fragment">Allan Kay OO</li>
+                <li class="fragment">C derivate OO</li>
+                <li class="fragment">Functional message passing</li>
+                </ul>
+                <aside class="notes">
+                    <p>
+                    I only have some 30 minutes for this talk so I won't do any kind of deep dive in to all kinds now. <br>
+                    But I think we all agree that machine code and Assembler is not the most efficient way to deliver value for us.<br>
+                    I would also argue that even if we say that we doo OOP. We don't really do that. Because it is not a good fit. for us. <br>
+                    </p>
+                    <p>
+                        Yes, we use classes and objects. But how much of our code is services, handlers, controllers and all other strange kind of things. <br>
+                        And since we usually want to load balance and because threading is hard, we really on our databases to be the one place where the actual truth is.<br>
+                        Backend code, mostly just take som request and transfers it either to and from a database, or to another system. <br>
+                        The truth is not in our systems. <br>                        
+                    </p>
+                </aside>
+            </section>
+            <section>
+                <ul style="font-size: 0.4em !important;line-height: normal !important;">
+                    <li class="fragment">HTTP request parsed and routed to controller method with input variable</li>
+                    <li class="fragment">Validate input with validator service</li>
+                    <li class="fragment">Authenticate input with authentication service</li>
+                    <li class="fragment">Convert input to Internal/Domain object</li>
+                    <li class="fragment">Call invoiceService with internal object</li>
+                    <li class="fragment">Invoice service calls Invoice Repository</li>
+                    <li class="fragment">Invoice repository prepares SQL statement of some kind, most likeley some ORM</li>
+                    <li class="fragment">Execute the SQL statement on a SQL server and wait for response</li>
+                    <li class="fragment">Convert the SQL response from a db object to Internal/Domain object and return to invoice service</li>
+                    <li class="fragment">Invoice service responds to controller</li>
+                    <li class="fragment">Controller converts to DTO object</li>
+                    <li class="fragment">Magic hooked upp things converts dto object to JSON and returns the response to the caller</li>
+                <aside class="notes">
+                 <p>
+                     Is any of this OO?<br>
+                     This could just be called Anemic models or with some fantasy it could be Active Records, and with alot of fantasy it could be called Domain driven design<br>
+                     It is very hard from all points in this program to get an idea of what will happen. <br>
+                     Authentication is probably not done this way, instead in some filter thingy function you have to know about. <br>
+                     The mapping is done with Automapper so you don't have to mess upp all the time. But that is hidden away somewhere else<br>
+                     Then we must think if DRY, so all validators and authenticators and services and what not are all quite big classes. <br>
+                     That deal with input from many places, reuse you know. <br>
+                     But what happened to Single Responsibility then? <br>
+                 </p>
+                 <p>
+                     This is just procedural but with objects and classes as a way to hide functionality and maybe some state, but mostly to group different functionality together. <br>
+                     Invoice 56 could be fetched by many clients at the same time, and all request would be dealt with this way. <br>
+                     So it is definitely not Allay kay kind off OO, small talk etc. <br>
+                     I would say it is not C style of OO either. 
+                 </p>
+                </aside>
+            </section>
+            <section>
+                <ul style="font-size: 0.4em !important;line-height: normal !important;">
+                    <li class="fragment">Route incoming call</li>
+                    <li class="fragment">Validate input </li>
+                    <li class="fragment">Authenticate input</li>
+                    <li class="fragment">prepare SQL statement of some kind</li>
+                    <li class="fragment">Execute the SQL statement on a SQL server and wait for response</li>
+                    <li class="fragment">Parse response from a db object</li>
+                    <li class="fragment">Convert the db response to a http response</li>
+                <aside class="notes">
+                 <p>
+                     This is what we are actually doing<br>
+                     What if we could write code that looked like this?
+                 </p>
+                </aside>
+            </section>
+            <section>
+                <pre><code data-trim data-noescape class="lang-fsharp hljs">
+                    HTTPRequest
+                    |> ParseInput    
+                    |> ValidateAccess
+                    |> GetInvoiceFromDB
+                    |> SerializeResponse
+                    |> HTTPResponse
+                    </code></pre>
+                    <aside class="notes">
+                        This is the same but written in a functional style. <br>
+                        We would then only need to implement thoose functions and we would be done. <br>
+                        This is composition, where we take input do something and return some output. 
+                    </aside>
+            </section>
+
             <section><img src="Images/ballonhill.png" />
                 <aside class="notes">
                     This is how it felt to me. Always trying to balance the ball on the hill.<br>
@@ -104,7 +206,7 @@
                     curse<br>
                 </aside>
             </section>
-            <section><img src="Images/ballinvalley.png" />
+            <!-- <section><img src="Images/ballinvalley.png" />
                 <aside class="notes">
                     Wouldn't this be nice? <br>
                     If the way you write code tends to gravitate towards the prefered position. <br>
@@ -113,13 +215,77 @@
                     He was talking about functional programing, and he is not one of these professor dudes you might
                     think of when talking about things like Haskell. <br>
                     He wrote a 500 page book about dependency injection and is a Consultant full time. <br>
-                    This and and the fact that I had been fiddling with tools like NSB and Akka made me take the leap in
-                    to this strange Functional thingy. <br>
-                    <br>
-                    F#, how hard can it be?
+                </aside>
+            </section> -->
+            
+            <section>
+                <ul>
+                    <li class="fragment">input to output</li>
+                    <li class="fragment">a -> b</li>
+                </ul>
+                <aside class="notes">
+                    This is what we did. <br>
+                    We took some input and did something and returned something else. <br>
+                    Not a very tricky concept. I mean that is how must methods work in c#?!<br>
+                    This could be written like a to b, and since we want to use symbols, we use an arrow instead of the to word. <br>
+                    But what happens if the input parsing fails? Maybe it it was inccoret input? <br>
+                    Yes we could throw an exception, but this is a kind of expected error! So it is important that we model it correctly. <br>
+                    Maybe the output of each function could either be succes or error? <br>
+                    Then we could expand on our notation. <br>
                 </aside>
             </section>
+            <section>
+                <pre><code data-trim data-noescape class="lang-fsharp hljs">
+                    HTTPRequest
+                    |> ParseInput    
+                    |> onSuccess ValidateAccess
+                    |> onSuccess GetInvoiceFromDB
+                    |> switch 
+                        | onSuccess -> SerializeResponse
+                        | onError -> MakeAnErrorResponse
+                    |> HTTPResponse
+                    </code></pre>
+                    <aside class="notes">
+                        If this is what we wrote in our controller, we could even show it to the PO and make sure we all share the understanding of what would happen.<br>
+                        But how do we achieve this? <br>
+                    </aside>
+            </section>
+            <section>
+                <pre><code data-trim data-noescape class="lang-csharp hljs">
+                    public class baseSucessError<t> {}
+                    public class Sucess : baseError 
+                        </code></pre>
+                <pre><code data-trim data-noescape class="lang-fsharp hljs">
+                type Result = 
+                    | Success of T
+                    | Error of E
+                    </code></pre>
+                <ul>
+                    <li class="fragment">input -> Result&lt;InvoiceRequest,InvoiceError&gt;</li>
+                </ul>
+                        
+                    <aside class="notes">
+                        You could of course do this with inheritance. Have a base class and then make subclasses that are either success or error. <br>
+                        But that would mean tons of code.. I'm lazy I don't like to write code.. <br>
+                        And nothing would stop our inhertance to break apart big time if the actaul subclasses did inherit directly from the baseclass instead of Error or Sucess. <br>
 
+                    </aside>
+            </section>
+           
+
+            <section>
+                HTTP request -> HTTP Response
+                <aside class="notes">
+                 <p>
+                 When building an API this is what you are doing. <br>
+                 You take a HTTP request and then you fiddle around a bit and then you return a HTTP Response. 
+                 </p>
+                 <p>
+                 Does this 
+ 
+             </p>
+                </aside>
+            </section>
             <section>
                 <pre><code data-trim data-noescape class="lang-fsharp hljs">
                         printf "Hello world"
@@ -171,29 +337,9 @@
                 But how this solve everything? 
             </aside>
            </section>
-           <section>
-            <img src="Images/functionseverywhere.png">
-            <aside class="notes">
-                As you see you just swap all your hard earned patterns, for one simple thing. <br>
-                A function. <br>
-                Then you are done!
-            </aside>
-           </section>
-           <section>
-               HTTP request -> HTTP Response
-               <aside class="notes">
-                <p>
-                When building an API this is what you are doing. <br>
-                You take a HTTP request and then you fiddle around a bit and then you return a HTTP Response. 
-                </p>
-                <p>
-                How does OOP help us here? Is it the HTTP thing that we should model? <br>
-                No of course not we should model the thing we are acting on. <br>
-                
-            </p>
+          
+           
 
-            </aside>
-           </section>
            <section>
                 <pre><code data-trim data-noescape class="lang-fsharp hljs">
                     let authRoutes principalStore (resolver: Resolver): HttpHandler list = [
