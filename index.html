@@ -175,6 +175,7 @@
                     <li class="fragment">Execute the SQL statement on a SQL server and wait for response</li>
                     <li class="fragment">Parse response from a db object</li>
                     <li class="fragment">Convert the db response to a http response</li>
+                </ul>
                 <aside class="notes">
                  <p>
                      This is what we are actually doing<br>
@@ -194,44 +195,41 @@
                     <aside class="notes">
                         This is the same but written in a functional style. <br>
                         We would then only need to implement thoose functions and we would be done. <br>
-                        This is composition, where we take input do something and return some output. 
                     </aside>
             </section>
-
-            <section><img src="Images/ballonhill.png" />
-                <aside class="notes">
-                    This is how it felt to me. Always trying to balance the ball on the hill.<br>
-                    Nothing in our tools help us stay here. Imperative languages like C# is really good. <br>
-                    You can write pretty much anything you want and connect it endless ways. But this is also a
-                    curse<br>
-                </aside>
-            </section>
-            <!-- <section><img src="Images/ballinvalley.png" />
-                <aside class="notes">
-                    Wouldn't this be nice? <br>
-                    If the way you write code tends to gravitate towards the prefered position. <br>
-                    Yeah given that the position you want is in the bottom of the pit. <br>
-                    This is what Mark Seman promised in his talk, Pit of success. <br>
-                    He was talking about functional programing, and he is not one of these professor dudes you might
-                    think of when talking about things like Haskell. <br>
-                    He wrote a 500 page book about dependency injection and is a Consultant full time. <br>
-                </aside>
-            </section> -->
-            
             <section>
                 <ul>
                     <li class="fragment">input to output</li>
                     <li class="fragment">a -> b</li>
                 </ul>
                 <aside class="notes">
-                    This is what we did. <br>
                     We took some input and did something and returned something else. <br>
                     Not a very tricky concept. I mean that is how must methods work in c#?!<br>
-                    This could be written like a to b, and since we want to use symbols, we use an arrow instead of the to word. <br>
-                    But what happens if the input parsing fails? Maybe it it was inccoret input? <br>
-                    Yes we could throw an exception, but this is a kind of expected error! So it is important that we model it correctly. <br>
-                    Maybe the output of each function could either be succes or error? <br>
-                    Then we could expand on our notation. <br>
+                    And yes, you can write code like this in C#. <br>
+                    But c# offers you so many possibilities to write it in so many other ways. <br>
+                    And it is very easy to cheat, and make it hard and difficult.<br>. 
+                    You see. It says a to b. 
+                    Not A cobbled with some state to nothing. <br>
+                    Not A cobbled with some state to B <br>
+                </aside>
+            </section>
+            <section>
+                Side effects are is a pain
+                <aside class="notes">
+                 <p>
+                     So many of our difficulties comes from unwanted side effects. <br>
+                     In a imperative language like c# when calling a method on a object. <br>
+                     There is not way to determine if it changed some internal state on the object so that the next time i call it something else will happen. <br>
+                     Mostly not a problem, but just the fact that this is they way it is. <br>
+                     Makes it much harder to both test and reason about the system. <br>
+                     Since this talk is mostly about backend stuff, and I just explained that we don't need state in our backend. <br>
+                     State lives in the database. <br>
+                     Would it not be much easier then to functions that gives the same result with the same input? <br>
+                     Then we can always run unit tests on thoose. <br>
+                     Yes, this breaks when we call the database. This is where the dreaded monad comes in. <br>
+                     But fear not. F# is not as strict as Haskel.<br>
+                     It is actaully perfectly fine to write code with side effects such as reading from disk or databases. <br>
+                 </p>
                 </aside>
             </section>
             <section>
@@ -246,147 +244,71 @@
                     |> HTTPResponse
                     </code></pre>
                     <aside class="notes">
-                        If this is what we wrote in our controller, we could even show it to the PO and make sure we all share the understanding of what would happen.<br>
-                        But how do we achieve this? <br>
+                        Would it be possible to take this even a step further. <br>
+                        And still have the strict a to b kind of functions. <br>
+                        But also deal with errors? <br>
+                        Sure is!<br>
+                        I mean this is possible in c# as well. Just that it's not natural in the language and you have endless possibilities to fuck up. <br>
+                        Parse input, and if the result was successful call validate access. <br>
+                        if validation went well take the result of that and get the invoice<br>
+                        If we got the invoice serialize the response. <br>
+                        If any of the above went wrong, serialize an error response instead. <br>
                     </aside>
             </section>
             <section>
-                <pre><code data-trim data-noescape class="lang-csharp hljs">
-                    public class baseSucessError<t> {}
-                    public class Sucess : baseError 
-                        </code></pre>
+                <pre><code data-trim data-noescape class="lang-fsharp hljs">
+                    HTTPRequest
+                    |> ParseInput    
+                    |> Error.bind ValidateAccess
+                    |> Error.bind GetInvoiceFromDB
+                    |> function
+                        | Ok x -> SerializeResponse x
+                        | Error e -> MakeAnErrorResponse e
+                    </code></pre>
+                    <aside class="notes">
+                        This is how it would look like in F#, often though the developers would create a new operator and write it |>><br>
+                        Or similar. 
+                        The ParseInput should be a pure function with no calls to any databases or such and could hence easily be tested with unit tests. 
+                        The validateAccess and getInvoice would probably not be. <br>
+                        Since F# is a strictly typed system. Much stricter then C#. <br>
+                        You would know that the code above works when compiling. Not the individual functions.  but the contracts between them.<br>
+                        There is no such thing as null. No more null checks. As long as you stay in f# land and don't call c# stuffy. <br>
+                    </aside>
+            </section>
+            <section>
                 <pre><code data-trim data-noescape class="lang-fsharp hljs">
                 type Result = 
                     | Success of T
                     | Error of E
                     </code></pre>
                 <ul>
-                    <li class="fragment">input -> Result&lt;InvoiceRequest,InvoiceError&gt;</li>
+                    <li class="fragment">Result&lt;T,E&gt;</li>
                 </ul>
-                        
                     <aside class="notes">
+                        What do I mean with even stricter type system? <br>
+                        Look at the code above. It is almost like a base class with two subclasses. Or maybe more like an enum with two classes as values.<br>
+                        This is a union type, or sum type. <br>
                         You could of course do this with inheritance. Have a base class and then make subclasses that are either success or error. <br>
-                        But that would mean tons of code.. I'm lazy I don't like to write code.. <br>
-                        And nothing would stop our inhertance to break apart big time if the actaul subclasses did inherit directly from the baseclass instead of Error or Sucess. <br>
-
+                        But that would mean tons of code.. there are examples of this online. Look it up if you want. At least until latest c# 8 it was hard to work with<br>
                     </aside>
             </section>
-           
-
-            <section>
-                HTTP request -> HTTP Response
-                <aside class="notes">
-                 <p>
-                 When building an API this is what you are doing. <br>
-                 You take a HTTP request and then you fiddle around a bit and then you return a HTTP Response. 
-                 </p>
-                 <p>
-                 Does this 
- 
-             </p>
-                </aside>
-            </section>
             <section>
                 <pre><code data-trim data-noescape class="lang-fsharp hljs">
-                        printf "Hello world"
+                    |> ParseInput    
+                    |> Error.bind ValidateAccess
                     </code></pre>
-                <aside class="notes">
-                    See, not very hard. <br>
-                    Just as promossed the amount of code whent down by alot. Just type this in a file, and compile it.
-                    It will print print "Hello world"<br>
-                    The same in C# actually is much more code, you would need to have a class and a entry point and what
-                    not. <br>
-                    Yes, if you want the f# thingy to compile to an exe you actually have to write a bit more. <br>
-                </aside>
-            </section>
-            <section>
-                <pre><code data-trim data-noescape class="lang-fsharp hljs">
-                        [&lt;EntryPoint&gt;]
-                            let main argv =
-                                printfn "Hello World"
-                                0 // return an integer exit code
-                    </code></pre>
-                <aside class="notes">
-                    Not very hard this functional thingy..<br>
-                    And indeed a bit shorter then the c# code. <br>
-                    Not that the C# thing is particualalry hard either
-                </aside>
-            </section>
-            <section>
-            <pre><code data-trim data-noescape class="lang-Csharp hljs">
-                    using System;
-
-                    namespace ConsoleApp1
-                    {
-                        class Program
-                        {
-                            static void Main(string[] args)
-                            {
-                                Console.WriteLine("Hello World!");
-                            }
-                        }
-                    }
-                </code></pre>
-            <aside class="notes">
-                And it is just boilerplate things that Visual studio will write out anyhow so why care?<br>
-                And What the heck is the difference? <br>
-                I mean, sure some less code but the actual typing is the same.<br>
-                So it just another syntax, maybe fine. But why on earth would I spend time to learn that? <br>
-                <br>
-                It is not just new syntax. <br>
-                But how this solve everything? 
-            </aside>
-           </section>
-          
-           
-
-           <section>
-                <pre><code data-trim data-noescape class="lang-fsharp hljs">
-                    let authRoutes principalStore (resolver: Resolver): HttpHandler list = [
-                        POST >=> route "/v1/auth/start" >=> resolver.toWebPart Auth.Views.start
-                        POST >=> route "/v1/auth/status" >=> resolver.toWebPart Auth.Views.status
-                        POST >=> route "/v1/auth/verify" >=> resolver.toWebPart (Auth.Views.verify principalStore)
-                        POST >=> route "/v1/auth/cancel" >=> resolver.toWebPart Auth.Views.cancel
-                        POST >=> route "/v1/auth/refresh" >=> resolver.toWebPart Auth.Views.refresh
-                    ]
-					</code></pre>
-            </section>
-            <section>
-                <pre><code data-trim data-noescape class="lang-csharp hljs" style="font-size: 0.4em !important;line-height: normal !important;">
-                        public class AuthController : Controller
-                        {
-                            [Route("Auth/start")]
-                            public IActionResult Start()
-                            {
-                                return View();
-                            }
-                    
-                            [Route("Auth/Status")]
-                            public IActionResult Status()
-                            {
-                                return View();
-                            }
-                    
-                            [Route("Auth/Verify")]
-                            public IActionResult Verify()
-                            {
-                                return View();
-                            }
-                            
-                            [Route("Auth/Cancel")]
-                            public IActionResult Cancel()
-                            {
-                                return View();
-                            }
-                    
-                            [Route("Auth/Cancel")]
-                            public IActionResult Refresh()
-                            {
-                                return View();
-                            }
-                    
-                        }
-					</code></pre>
+                    <aside class="notes">
+                        Here the Error.bind takes two arguments. first a function that takes A and returns Result b, Error E. <br>
+                        The second argument must be a Result Ok A, Error E. 
+                        If the second argument is OK a it calls the function with A. If the input was an error it just returns the error without calling the function. <br>
+                        <p>
+                            Yes, this might hurt a bit. <br>
+                            Or it might not be that hard right now. When I'm just describing it all. <br>
+                            But it is actually very different when trying to write the code. <br>
+                            It took me several months to be able to write f# fluently. <br>
+                            Even though i had been coding for almost 20 years.. <br>
+                        </p>
+                    </aside>
             </section>
         </div>
 
