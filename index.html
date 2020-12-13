@@ -104,7 +104,11 @@
                     What is it that we are really doing? Are we really using the right tools for the job? <br>
                 </p>
                 <p>
-                    On one hand yes. I mean we can absolutely build to kind of software we do today with C#<br>
+                    At this time I hade been playing with Akka and NSB and Event sourcing. <br>
+                    I started to feel that there surely must be better ways to do stuff<br>
+                </p>
+                <p>
+                    I mean we can absolutely build to kind of software we do today with C#<br>
                     But are there any alternatives? <br>
                 </p>
                 </aside>
@@ -149,7 +153,9 @@
                     <li class="fragment">Magic hooked upp things converts dto object to JSON and returns the response to the caller</li>
                 <aside class="notes">
                  <p>
-                     Is any of this OO?<br>
+                    Does really OOP help us here? And is it really OOP?<br>
+                    For sure not they kind of OO that Alan Kay has been talking about. <br>
+                     
                      This could just be called Anemic models or with some fantasy it could be Active Records, and with alot of fantasy it could be called Domain driven design<br>
                      It is very hard from all points in this program to get an idea of what will happen. <br>
                      Authentication is probably not done this way, instead in some filter thingy function you have to know about. <br>
@@ -161,8 +167,6 @@
                  <p>
                      This is just procedural but with objects and classes as a way to hide functionality and maybe some state, but mostly to group different functionality together. <br>
                      Invoice 56 could be fetched by many clients at the same time, and all request would be dealt with this way. <br>
-                     So it is definitely not Allay kay kind off OO, small talk etc. <br>
-                     I would say it is not C style of OO either. 
                  </p>
                 </aside>
             </section>
@@ -185,16 +189,14 @@
             </section>
             <section>
                 <pre><code data-trim data-noescape class="lang-fsharp hljs">
-                    HTTPRequest
-                    |> ParseInput    
-                    |> ValidateAccess
-                    |> GetInvoiceFromDB
-                    |> SerializeResponse
-                    |> HTTPResponse
+                    parseInput    
+                    |> validateAccess
+                    |> getInvoiceFromDB
+                    |> serializeResponse
                     </code></pre>
                     <aside class="notes">
                         This is the same but written in a functional style. <br>
-                        We would then only need to implement thoose functions and we would be done. <br>
+                        We would then only need to implement those functions and we would be done. <br>
                     </aside>
             </section>
             <section>
@@ -214,7 +216,9 @@
                 </aside>
             </section>
             <section>
-                Side effects are is a pain
+                Keeping track of state. <br>
+                or<br>
+                Side effects is a pain!
                 <aside class="notes">
                  <p>
                      So many of our difficulties comes from unwanted side effects. <br>
@@ -224,24 +228,57 @@
                      Makes it much harder to both test and reason about the system. <br>
                      Since this talk is mostly about backend stuff, and I just explained that we don't need state in our backend. <br>
                      State lives in the database. <br>
-                     Would it not be much easier then to functions that gives the same result with the same input? <br>
-                     Then we can always run unit tests on thoose. <br>
+                     Would it not be much easier then to use functions that gives the same result with the same input? <br>
+                     Then we can always run unit tests on those. <br>
                      Yes, this breaks when we call the database. This is where the dreaded monad comes in. <br>
-                     But fear not. F# is not as strict as Haskel.<br>
-                     It is actaully perfectly fine to write code with side effects such as reading from disk or databases. <br>
+                     But fear not. F# is not as strict as Haskell.<br>
+                     It is actually perfectly fine to write code with side effects such as reading from disk or databases. <br>
                  </p>
                 </aside>
             </section>
             <section>
+                What about errors? <br>
+                Expected vs Unexpected? <br>
+                <p class="fragment">
+                    Should the validator service throw an exception?<br>
+                    When calling the database, how do we now if the error was temporary or permanent?<br>
+                </p>
+                <p class="fragment">
+                    try
+                        ... 
+                    catch (ex Exception)
+                        Logger.Exception(..)
+                    end
+                </p>
+                <aside class="notes">
+                 <p>
+                    There is no easy way to differentiate Expected from Unexpected Errors. <br>
+                    There is a difference between invalid input and memory fault. <br>
+                    When we do HTTP APIs, we have the 400 and 500 Errors. <br>
+                    But in our code we have no satisfactory way to deal with it.<br>
+                 </p>
+                 <p>
+                    Exceptions work fine for fatal stuff that we can't recover from. <br>
+                    I have rarely seen code bases with what one could call correct Exception handling<br>
+                 </p>
+                 <p>
+                     This is not a way to deal with errors! 
+                     Only catch them at the appropriate place. Where you can deal with it. <br>
+                     But where is that? 
+                 </p>
+                </aside>
+            </section>
+            
+            
+            <section>
                 <pre><code data-trim data-noescape class="lang-fsharp hljs">
-                    HTTPRequest
-                    |> ParseInput    
-                    |> onSuccess ValidateAccess
-                    |> onSuccess GetInvoiceFromDB
+                    parseInput    
+                    |> onSuccess validateAccess
+                    |> onSuccess getInvoiceFromDB
                     |> switch 
-                        | onSuccess -> SerializeResponse
-                        | onError -> MakeAnErrorResponse
-                    |> HTTPResponse
+                        | onSuccess -> serializeResponse
+                        | onError -> makeAnErrorResponse
+                    
                     </code></pre>
                     <aside class="notes">
                         Would it be possible to take this even a step further. <br>
@@ -257,13 +294,12 @@
             </section>
             <section>
                 <pre><code data-trim data-noescape class="lang-fsharp hljs">
-                    HTTPRequest
-                    |> ParseInput    
-                    |> Error.bind ValidateAccess
-                    |> Error.bind GetInvoiceFromDB
+                    parseInput    
+                    |> Error.bind validateAccess
+                    |> Error.bind getInvoiceFromDB
                     |> function
-                        | Ok x -> SerializeResponse x
-                        | Error e -> MakeAnErrorResponse e
+                        | Ok x -> serializeResponse x
+                        | Error e -> makeAnErrorResponse e
                     </code></pre>
                     <aside class="notes">
                         This is how it would look like in F#, often though the developers would create a new operator and write it |>><br>
@@ -278,7 +314,7 @@
             <section>
                 <pre><code data-trim data-noescape class="lang-fsharp hljs">
                 type Result = 
-                    | Success of T
+                    | Ok of T
                     | Error of E
                     </code></pre>
                 <ul>
@@ -289,27 +325,130 @@
                         Look at the code above. It is almost like a base class with two subclasses. Or maybe more like an enum with two classes as values.<br>
                         This is a union type, or sum type. <br>
                         You could of course do this with inheritance. Have a base class and then make subclasses that are either success or error. <br>
-                        But that would mean tons of code.. there are examples of this online. Look it up if you want. At least until latest c# 8 it was hard to work with<br>
                     </aside>
             </section>
             <section>
                 <pre><code data-trim data-noescape class="lang-fsharp hljs">
-                    |> ParseInput    
-                    |> Error.bind ValidateAccess
+                let parseInput (input : string) : Result&lt;InvoiceRequest, ExpectedError &gt;
+                    if string.IsNullOrWhiteSpace(input) then 
+                        Error ExpectedError.WhiteSpaceInput
+                    else
+                        Ok {InvoiceId = input}
+                    </code></pre>
+                    <pre class="fragment"><code data-trim data-noescape class="lang-fsharp hljs">
+                        let validateAccess (input : InvoiceRequest) : Result&lt;InvoiceRequest, ExpectedError &gt;
+                            if input.InvoiceId = "hidden" then 
+                                Error ExpectedError.NoAccess
+                            else
+                                Ok Input
+                            </code></pre>
+                    <aside class="notes">
+                        <p>
+                        This is what the function would look like in F#. <br>
+                        Expect you don't have to type in the type declarations, since the compiler figures that out. <br>
+                        So it takes a regular string as input and returns either Ok InvoiceRequest or Error ExcpectedError<br>
+                    </p>
+                    <p>
+                        Then our super duper validateAccess gives access to anyone. Except if they try to get hold of invoiceId Hidden.. <br>
+                        But this function takes a "normal" input and return a Result type. 
+                    </p>
+                    <p>
+                        I won't dig into Monads and Functors etc, even though they are not any more scary then Liskowsky Substitution Principle<br>
+                        And much easier than SRP or DRY. <br>
+                    </p>
+                    </aside>
+            </section>
+            
+            <section>
+                <pre><code data-trim data-noescape class="lang-fsharp hljs">
+                    parseInput    
+                    |> Error.bind validateAccess
                     </code></pre>
                     <aside class="notes">
-                        Here the Error.bind takes two arguments. first a function that takes A and returns Result b, Error E. <br>
-                        The second argument must be a Result Ok A, Error E. 
+                        This is how it is used. <br>
+                        Here the Error.bind takes two arguments. first a function that takes a InvoiceRequest and returns Result InvoiceRequest, Error ExpectedError. <br>
+                        The second argument must be a Result Ok InvoiceRequest, Error ExpectedError. 
                         If the second argument is OK a it calls the function with A. If the input was an error it just returns the error without calling the function. <br>
                         <p>
                             Yes, this might hurt a bit. <br>
-                            Or it might not be that hard right now. When I'm just describing it all. <br>
-                            But it is actually very different when trying to write the code. <br>
-                            It took me several months to be able to write f# fluently. <br>
-                            Even though i had been coding for almost 20 years.. <br>
+                            It is somewhat confusing in the begining, or at least it was for me. <br>
+                            And yes you can do this in c# as well. <br>
+                            It's just that the code gets very messy<br>
                         </p>
                     </aside>
             </section>
+            <section>
+                <pre><code data-trim data-noescape class="lang-fsharp hljs">
+type ExpectedError = 
+    | MissingInvoiceId
+    | InvoiceIdNotANumber
+    | InvoiceMissingInDatabase of string
+                    </code></pre>
+                    <aside class="notes">
+                        <p>
+                            This is how we can define our ExpectedError<br>
+                            It can be either or this errors. But only one of them. 
+                            And as you see. One of the options can even hold values. If we need it to. 
+                        </p>
+                        Why on earth do you need that? I mean sure it looks cool but.. ehe.. 
+                    </aside>
+            </section>
+            <section>
+                <pre><code data-trim data-noescape class="lang-fsharp hljs">
+let makeAnErrorResponse e = 
+    match e with 
+        | MissingInvoiceId -> 403, "Missing invoice Id"
+        | InvoiceIdNotANumber -> 403, "Invoice Id must be a number"
+        | InvoiceMissingInDatabase x -> 404, sprintf "Invoice %s not found in the database" x
+                    </code></pre>
+                    <aside class="notes">
+                        This is why it is so super cool with union types<br>
+                        To actually get the value of it we have to switch on it. That is the match e with. <br>
+                        And in this case we return a tuple of int string. 
+                        Then since it is not open like inheritance where you could dynamically load a new class that inherits from the base class. <br>
+                        The compiler will actually warn us (or error if we prefer) when we are missing a case. <br>
+                        So it is safe to add a new option to the ExpectedError type and still know for sure you have caught all cases where it is needed.<br>
+                    </aside>
+            </section>
+            <section>
+               Backend only? 
+               <p class="Fragement">No, not at all.</p>
+                    <aside class="notes">
+                        I Actually started to look into functional programing because of FE code. <br>
+                        I looked at React, liked the MVU ide. Found it to exhausting and to much ceremony and started to code with elm. <br>
+                        Now I haven't done to much in ELM. But it was easy to getting started and I did some smaller sites in it for fun. <br>
+                        Then I went over to f#. Mostly because I had some backend stuff to do. It was hard<br>
+                        Really hard to get started in F#. <br>
+                        I mean I had coded for 20+ years and then I couldn't do much more then Hello World. <br>
+                        I had to read books, view presentations and read blogs<br>
+                        Still it took me several months before I code write a bit more complex things<br>
+                        But you guys have a much better position if you are having the same feeling of trying to find another way to express your code as I did<br>
+                        We have 2 departments with several team writing f#. So if you get stuck, or just want to know more reach out to any of them or me. <br>
+                        And you will have a much faster learning cure. <br>
+                        If you like me, only have dune procedural code, it will change the way you look at code to the better.<br>
+                        Even if you keep writing c#<br>
+                    </aside>
+            </section>
+            <section>
+                Is it really a silver bullet? 
+                <p class="Fragement">No, not at all.</p>
+                     <aside class="notes">
+                         It is most often easier to write expressive but still easy to follow code.<br>
+                         But it is easy to get lost in endless discussion about Monads and functors and what not.<br>
+                         The biggest benefit is that it makes it easier to write good code and harder to write bad code<br>
+                         But of course not nearly impossible to write bad code.<br>
+                     </aside>
+             </section>
+             <section>
+                <a href="https://www.infoq.com/presentations/Simple-Made-Easy/">Simple made easy - Rich Hickey</a>
+                <a href="https://www.youtube.com/watch?v=US8QG9I1XW0">Pit of success - Mark Seemann</a>
+                <a href="https://www.youtube.com/watch?v=1pSH8kElmM4">Domain Modeling Made Functional - Scott Wlaschin</a>
+                     <aside class="notes">
+                         Thats all for me! <br>
+                         I will make sure you get the presentation sent over with all notes if like to punish your selfs and go through it once more.<br>
+                         If time, questions otherwise just reach out to me if you want to ask anything or have a discussion<br>
+                     </aside>
+             </section>
         </div>
 
     </div>
